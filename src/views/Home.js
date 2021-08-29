@@ -58,11 +58,11 @@ class Home extends Component {
 
 
   //== method to control moving between shelfs ==//
-  controlBookMoving = (id, val) =>{
+  controlBookMoving = async (book, val) =>{
 
     // create new data with current movements
     const changedData = this.state.allData.map(el =>{
-      if(id === el.id){
+      if(book.id === el.id){
         el.shelf = val;
         return el ;
       }else{
@@ -77,6 +77,13 @@ class Home extends Component {
 
     // filter and store data
     this.filterAndStore();
+
+    try{
+      const res = await BooksAPI.update(book, val);
+      console.log(res)
+    }catch(err){
+      console.log(err)
+    }
 
   }
 

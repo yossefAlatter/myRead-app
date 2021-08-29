@@ -15,7 +15,7 @@ const Book = ({bookId, bookImage, bookTitle, bookAuthors,bookShelf , controlBook
       <div className="book-top">
         <div className="book-cover" style={{ width: 128, height: 193, backgroundImage: `url(${bookImage})` }}></div>
         <div className="book-shelf-changer">
-          <select onChange={(e)=>{controlBookMoving(bookId, e.target.value)}} value={bookShelf || "none"}>
+          <select onChange={(e)=>{controlBookMoving({id: bookId}, e.target.value)}} value={bookShelf || "none"}>
             <option value="move" disabled>Move to...</option>
             <option value="currentlyReading">Currently Reading</option>
             <option value="wantToRead">Want to Read</option>

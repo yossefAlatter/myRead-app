@@ -45,23 +45,31 @@ class Search extends Component {
 
 
   //== method to search ==//
-  fetchData = async () => {
-    try{
-      const res = await BooksAPI.search(this.state.searchQuery);
-      if(res){
-        this.setState({
-          searchBooks: (res ? res.map(el=>({ id: el.id , bookShelf: el.shelf, bookImage: el.imageLinks.thumbnail, bookTitle: el.title, bookAuthors: [...el.authors]})) : [])
-        })
-      }else{
+  fetchData = async (e) => {
+    if(e.key === "Enter"){
+      document.getElementById("container-items").style.display = "none" ;
+      document.querySelector(".loading").style.display = "block";
+      try{
+        const res = await BooksAPI.search(this.state.searchQuery);
+        console.log(res)
+        if(res){
+          this.setState({
+            searchBooks: (res ? res.map(el=>({ id: el.id , bookShelf: el.shelf, bookImage: el.imageLinks.thumbnail, bookTitle: el.title, bookAuthors: [...el.authors]})) : [])
+          })
+        }else{
+          this.setState({
+            searchBooks: []
+          })
+        }
+      }catch(err){
         this.setState({
           searchBooks: []
         })
       }
-    }catch(err){
-      this.setState({
-        searchBooks: []
-      })
+      document.querySelector(".loading").style.display = "none";
+      document.getElementById("container-items").style.display = "flex" ;
     }
+
   }
 
   componentDidMount= async () =>{
@@ -83,13 +91,13 @@ class Search extends Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"  value={this.state.searchQuery} onChange={this.handleInputChange}  onKeyUp={this.fetchData}/>
+                <input type="text" placeholder="Search by title or author"  value={this.state.searchQuery} onChange={this.handleInputChange}  onKeyPress={this.fetchData}/>
               </div>
             </div>
             <div className="search-books-results">
-              <ol className="books-grid">
-
-              {(this.state.searchBooks.length) ? this.state.searchBooks.map(el => (<li key={el.id}><Book bookId={el.id} bookImage={el.bookImage} bookTitle={el.bookTitle} bookAuthors={el.bookAuthors} bookShelf={el.bookShelf} controlBookMoving={this.controlBookMoving} /></li>) ) : "" }
+              <div className="loading" style={{display: "none"}}>Loading...</div>
+              <ol className="books-grid" id="container-items">
+              {(this.state.searchBooks.length) ? this.state.searchBooks.map(el => (<li key={el.id}><Book bookId={el.id} bookImage={el.bookImage} bookTitle={el.bookTitle} bookAuthors={el.bookAuthors} bookShelf={el.bookShelf} controlBookMoving={this.controlBookMoving} /></li>) ) : <li className="no-items" >There are no items</li> }
 
               </ol>
             </div>

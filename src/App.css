@@ -95,6 +95,12 @@ body, .app {
   
 }
 
+.no-items{
+  font-size: 1.5em;
+  padding: 25px 0 !important;
+  color: rgb(122, 122, 122);
+}
+
 
 /* search page */
 
