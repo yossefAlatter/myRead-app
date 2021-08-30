@@ -48,7 +48,8 @@ you must have according software
 │   └── read.png
 └── src
     ├── components
-    │   └── Book.js
+    │   ├── Book.js
+    │   └── Shelf.js
     ├── icons 
     │   ├── add.svg
     │   ├── arrow-back.svg

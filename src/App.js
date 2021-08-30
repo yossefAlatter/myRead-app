@@ -1,8 +1,9 @@
 import React from 'react';
-import { Route } from 'react-router-dom';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
 import Home from './views/Home.js';
 import Search from './views/Search.js';
+import NotFound from './views/NotFound';
 
 
 class BooksApp extends React.Component {
@@ -20,8 +21,11 @@ class BooksApp extends React.Component {
   render() {
     return (
       <div className="app">
+        <Switch>
           <Route exact path="/" component={Home} />
           <Route path="/search" component={Search} />
+          <Route component={NotFound} />
+          </Switch>
       </div>
     )
   }

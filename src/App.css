@@ -226,3 +226,30 @@ a:active {
   text-align: center;
   font-size: 0.8em;
 }
+
+
+/** not found page style **/
+
+.not-founding{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  width: 100%;
+  color: #999;;
+}
+.not-founding * {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+.not-founding h2{
+  font-size: 17em;
+  margin-top: -60px;
+}
+.not-founding h5{
+  font-size: 3em;
+  font-weight: 600;
+  margin-top: -60px;
+}

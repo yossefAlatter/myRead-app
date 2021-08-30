@@ -3,7 +3,7 @@
 
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import Book from '../components/Book';
+import Shelf from '../components/Shelf';
 import * as BooksAPI from './../BooksAPI';
 
 //== end ==//
@@ -79,8 +79,7 @@ class Home extends Component {
     this.filterAndStore();
 
     try{
-      const res = await BooksAPI.update(book, val);
-      console.log(res)
+      await BooksAPI.update(book, val);
     }catch(err){
       console.log(err)
     }
@@ -90,6 +89,20 @@ class Home extends Component {
 
   //== render Component UI ==//
   render() { 
+    const myShelf = [
+      {
+        title: "Currently Reading",
+        items: this.state.currentlyReading
+      },
+      {
+        title: "Want To Read",
+        items: this.state.wantToRead
+      },
+      {
+        title: "Read",
+        items: this.state.read
+      },
+    ];
     return (
           <div className="list-books">
             <div className="list-books-title">
@@ -97,39 +110,9 @@ class Home extends Component {
             </div>
             <div className="list-books-content">
               <div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Currently Reading</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
 
-                      {/* dynamic display for currently reading books */}
-                      {(this.state.currentlyReading) ? this.state.currentlyReading.map(el => (<li key={el.id}><Book bookId={el.id} bookImage={el.bookImage} bookTitle={el.bookTitle} bookAuthors={el.bookAuthors} bookShelf={el.bookShelf} controlBookMoving={this.controlBookMoving} /></li>)) : (<li className="loading">Loading</li>)}
+                {myShelf.map(el=>(<Shelf shelfTitle={el.title} shelfItems={el.items} controlBookMoving={this.controlBookMoving} key={el.title} />))}
 
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Want to Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-
-                      {/* dynamic display for want ro reading books */}
-                      {(this.state.wantToRead) ? this.state.wantToRead.map(el => (<li key={el.id}><Book bookId={el.id} bookImage={el.bookImage} bookTitle={el.bookTitle} bookAuthors={el.bookAuthors} bookShelf={el.bookShelf} controlBookMoving={this.controlBookMoving} /></li>)) : (<li className="loading">Loading</li>)}
-
-                    </ol>
-                  </div>
-                </div>
-                <div className="bookshelf">
-                  <h2 className="bookshelf-title">Read</h2>
-                  <div className="bookshelf-books">
-                    <ol className="books-grid">
-
-                      {/* dynamic display for read books */}
-                      {(this.state.read) ? this.state.read.map(el => (<li key={el.id}><Book bookId={el.id} bookImage={el.bookImage} bookTitle={el.bookTitle} bookAuthors={el.bookAuthors} bookShelf={el.bookShelf} controlBookMoving={this.controlBookMoving} /></li>)) : (<li className="loading">Loading</li>)}
-
-                    </ol>
-                  </div>
-                </div>
               </div>
             </div>
             <div className="open-search">

@@ -17,64 +17,79 @@ class Search extends Component {
   //== needed state ==//
   state = { 
     searchQuery: "" ,
-    searchBooks: []
+    searchBooks: [],
+    allData: []
   }
 
 
   //== method to control input value ==//
-  handleInputChange = (e) =>{
+  handleInputChange = async (e) =>{
 
     this.setState({
       searchQuery: e.target.value
-    })
+    });
+
+    await this.fetchData() ;
 
   }
 
+  componentDidMount= async () =>{
+    const res = await BooksAPI.getAll() ;
+
+    this.setState({
+      allData: [...res]
+    })
+  }
 
   //== method to controll books moving ==//
   controlBookMoving = async(id, val) =>{
 
     try{
-      const res = await BooksAPI.update(id, val);
-      console.log(res)
+      await BooksAPI.update(id, val);
     }catch(err){
       console.log(err)
     }
     
   }
 
+  //== function to make sure of books selves ==//
+  searchInSelves = (id) => {
 
-  //== method to search ==//
-  fetchData = async (e) => {
-    if(e.key === "Enter"){
-      document.getElementById("container-items").style.display = "none" ;
-      document.querySelector(".loading").style.display = "block";
-      try{
-        const res = await BooksAPI.search(this.state.searchQuery);
-        console.log(res)
-        if(res){
-          this.setState({
-            searchBooks: (res ? res.map(el=>({ id: el.id , bookShelf: el.shelf, bookImage: el.imageLinks.thumbnail, bookTitle: el.title, bookAuthors: [...el.authors]})) : [])
-          })
-        }else{
-          this.setState({
-            searchBooks: []
-          })
-        }
-      }catch(err){
-        this.setState({
-          searchBooks: []
-        })
-      }
-      document.querySelector(".loading").style.display = "none";
-      document.getElementById("container-items").style.display = "flex" ;
+    const searched = this.state.allData.find((el)=> el.id === id) ;
+    if(searched){
+      return searched.shelf;
+    }else{
+      return undefined;
     }
 
   }
 
-  componentDidMount= async () =>{
-    
+  //== method to search ==//
+  fetchData = async () => {
+
+    document.getElementById("container-items").style.display = "none" ;
+    document.querySelector(".loading").style.display = "block";
+    try{
+      const res = await BooksAPI.search(this.state.searchQuery);
+      if(res){
+        this.setState({
+          searchBooks: (res ? res.map((el)=>({ id: el.id , bookShelf: this.searchInSelves(el.id), bookImage: el.imageLinks.thumbnail, bookTitle: el.title, bookAuthors: [...el.authors]})) : [])
+        })
+      }else{
+        this.setState({
+          searchBooks: []
+        })
+      }
+    }catch(err){
+      this.setState({
+        searchBooks: []
+      })
+    }
+    document.querySelector(".loading").style.display = "none";
+    document.getElementById("container-items").style.display = "flex" ;
+
   }
+
 
   //== render Ui ==//
   render() { 
@@ -91,7 +106,7 @@ class Search extends Component {
                   However, remember that the BooksAPI.search method DOES search by title or author. So, don't worry if
                   you don't find a specific author or title. Every search is limited by search terms.
                 */}
-                <input type="text" placeholder="Search by title or author"  value={this.state.searchQuery} onChange={this.handleInputChange}  onKeyPress={this.fetchData}/>
+                <input type="text" placeholder="Search by title or author"  value={this.state.searchQuery} onChange={this.handleInputChange} />
               </div>
             </div>
             <div className="search-books-results">
